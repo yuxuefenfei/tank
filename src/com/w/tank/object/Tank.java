@@ -98,6 +98,6 @@ public class Tank extends GameObject {
     }
 
     public void fire() {
-        frame.bullet = new Bullet(x, y, direction);
+        frame.bullets.add(new Bullet(x, y, direction, frame));
     }
 }
