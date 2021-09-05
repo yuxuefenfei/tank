@@ -24,11 +24,14 @@ public class Bullet extends GameObject {
      */
     private boolean lived = true;
 
+    private Group group;
+
     private TankFrame frame;
 
-    public Bullet(int x, int y, DirectionEnum direction, TankFrame frame) {
+    public Bullet(int x, int y, DirectionEnum direction, Group group, TankFrame frame) {
         super(x, y, WIDTH, HEIGHT);
         this.direction = direction;
+        this.group = group;
         this.frame = frame;
     }
 
@@ -70,6 +73,11 @@ public class Bullet extends GameObject {
     }
 
     public void collide(Tank tank) {
+
+        if (group.equals(Group.BAD)) {
+            return;
+        }
+
         Rectangle r1 = new Rectangle(x, y, width, height);
         Rectangle r2 = new Rectangle(tank.x, tank.y, tank.width, tank.height);
 

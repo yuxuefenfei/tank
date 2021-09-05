@@ -5,6 +5,7 @@ import com.w.tank.ResourceManager;
 import com.w.tank.TankFrame;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Tank extends GameObject {
 
@@ -31,7 +32,11 @@ public class Tank extends GameObject {
      */
     private boolean lived = true;
 
+    private Group group;
+
     private TankFrame frame;
+
+    private Random random = new Random();
 
     public Tank() {
         super(0, 0, WIDTH, HEIGHT);
@@ -42,10 +47,11 @@ public class Tank extends GameObject {
         this.frame = frame;
     }
 
-    public Tank(int x, int y, TankFrame frame, DirectionEnum direction) {
+    public Tank(int x, int y, TankFrame frame, DirectionEnum direction, Group group) {
         super(x, y, WIDTH, HEIGHT);
         this.direction = direction;
         this.frame = frame;
+        this.group = group;
     }
 
     public Tank(int x, int y, int width, int height) {
@@ -121,9 +127,13 @@ public class Tank extends GameObject {
                 g.drawImage(ResourceManager.tankR, x, y, null);
                 break;
         }
+
+        if (group.equals(Group.BAD) && random.nextInt(10) > 7) {
+            fire();
+        }
     }
 
     public void fire() {
-        frame.bullets.add(new Bullet(x + width / 2 - Bullet.WIDTH / 2, y + height / 2 - Bullet.HEIGHT / 2, direction, frame));
+        frame.bullets.add(new Bullet(x + width / 2 - Bullet.WIDTH / 2, y + height / 2 - Bullet.HEIGHT / 2, direction, group, frame));
     }
 }

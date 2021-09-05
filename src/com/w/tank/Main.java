@@ -1,5 +1,6 @@
 package com.w.tank;
 
+import com.w.tank.object.Group;
 import com.w.tank.object.Tank;
 
 public class Main {
@@ -9,7 +10,7 @@ public class Main {
         frame.setVisible(true);
 
         for (int i = 0; i < 6; i++) {
-            frame.enemyTank.add(new Tank(50 + i * 60, 200, frame,DirectionEnum.DOWN));
+            frame.enemyTank.add(new Tank(50 + i * 100, 200, frame, DirectionEnum.DOWN, Group.BAD));
         }
 
         new Thread(() -> {

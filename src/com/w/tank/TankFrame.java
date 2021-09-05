@@ -1,6 +1,7 @@
 package com.w.tank;
 
 import com.w.tank.object.Bullet;
+import com.w.tank.object.Group;
 import com.w.tank.object.Tank;
 
 import java.awt.*;
@@ -29,7 +30,7 @@ public class TankFrame extends Frame {
     /**
      * 主战坦克
      */
-    private Tank mainTank = new Tank(80, 60, this, DirectionEnum.DOWN);
+    private Tank mainTank = new Tank(80, 60, this, DirectionEnum.DOWN, Group.GOOD);
     private Image screenImage = null;
 
     public TankFrame() {
