@@ -1,6 +1,7 @@
 package com.w.tank;
 
 import com.w.tank.object.Bullet;
+import com.w.tank.object.Explode;
 import com.w.tank.object.Group;
 import com.w.tank.object.Tank;
 
@@ -26,6 +27,7 @@ public class TankFrame extends Frame {
 
     public List<Bullet> bullets = new ArrayList<>();
     public List<Tank> enemyTank = new ArrayList<>();
+    public List<Explode> explodes = new ArrayList<>();
 
     /**
      * 主战坦克
@@ -78,6 +80,10 @@ public class TankFrame extends Frame {
             for (int j = 0; j < enemyTank.size(); j++) {
                 bullets.get(i).collide(enemyTank.get(j));
             }
+        }
+
+        for (int i = 0; i < explodes.size(); i++) {
+            explodes.get(i).paint(g);
         }
     }
 

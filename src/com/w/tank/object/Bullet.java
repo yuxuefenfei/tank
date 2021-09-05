@@ -84,6 +84,7 @@ public class Bullet extends GameObject {
         if (r1.intersects(r2)) {
             this.lived = false;
             tank.setLived(false);
+            frame.explodes.add(new Explode(tank.x - tank.width / 2, tank.y - tank.height / 2, 0, 0, frame));
         }
     }
 }
