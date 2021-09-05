@@ -27,7 +27,7 @@ public abstract class GameObject {
      */
     protected int height;
 
-    public GameObject(int x, int y, int width, int height) {
+    protected GameObject(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;

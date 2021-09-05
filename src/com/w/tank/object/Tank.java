@@ -1,14 +1,15 @@
 package com.w.tank.object;
 
 import com.w.tank.DirectionEnum;
+import com.w.tank.ResourceManager;
 import com.w.tank.TankFrame;
 
 import java.awt.*;
 
 public class Tank extends GameObject {
 
-    private final static int DEFAULT_WIDTH = 50;
-    private final static int DEFAULT_HEIGHT = 50;
+    public final static int WIDTH = ResourceManager.tankWidth();
+    public final static int HEIGHT = ResourceManager.tankHeight();
 
     /**
      * 坦克的初始速度
@@ -25,27 +26,26 @@ public class Tank extends GameObject {
      */
     private boolean stop = true;
 
+    /**
+     * 存活
+     */
+    private boolean lived = true;
+
     private TankFrame frame;
 
     public Tank() {
-        super(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
+        super(0, 0, WIDTH, HEIGHT);
     }
 
     public Tank(int x, int y, TankFrame frame) {
-        super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        super(x, y, WIDTH, HEIGHT);
         this.frame = frame;
     }
 
-    public Tank(int x, int y, DirectionEnum direction) {
-        super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    public Tank(int x, int y, TankFrame frame, DirectionEnum direction) {
+        super(x, y, WIDTH, HEIGHT);
         this.direction = direction;
-    }
-
-    public Tank(int x, int y, int speed, DirectionEnum direction) {
-        super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        this.speed = speed;
-        this.direction = direction;
+        this.frame = frame;
     }
 
     public Tank(int x, int y, int width, int height) {
@@ -76,8 +76,21 @@ public class Tank extends GameObject {
         this.stop = stop;
     }
 
+    public boolean isLived() {
+        return lived;
+    }
+
+    public void setLived(boolean lived) {
+        this.lived = lived;
+    }
+
     @Override
     public void paint(Graphics g) {
+        if (!lived) {
+            frame.enemyTank.remove(this);
+            return;
+        }
+
         if (!stop) {
             switch (direction) {
                 case UP:
@@ -94,10 +107,23 @@ public class Tank extends GameObject {
                     break;
             }
         }
-        g.fillRect(x, y, width, height);
+        switch (direction) {
+            case UP:
+                g.drawImage(ResourceManager.tankU, x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(ResourceManager.tankD, x, y, null);
+                break;
+            case LEFT:
+                g.drawImage(ResourceManager.tankL, x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(ResourceManager.tankR, x, y, null);
+                break;
+        }
     }
 
     public void fire() {
-        frame.bullets.add(new Bullet(x, y, direction, frame));
+        frame.bullets.add(new Bullet(x + width / 2 - Bullet.WIDTH / 2, y + height / 2 - Bullet.HEIGHT / 2, direction, frame));
     }
 }

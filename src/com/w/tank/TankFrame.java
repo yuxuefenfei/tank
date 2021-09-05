@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class TankFrame extends Frame {
@@ -23,12 +22,14 @@ public class TankFrame extends Frame {
      * 默认的窗口高度 600px
      */
     public static final int DEFAULT_HEIGHT = 600;
+
     public List<Bullet> bullets = new ArrayList<>();
+    public List<Tank> enemyTank = new ArrayList<>();
 
     /**
      * 主战坦克
      */
-    private Tank mainTank = new Tank(80, 60, this);
+    private Tank mainTank = new Tank(80, 60, this, DirectionEnum.DOWN);
     private Image screenImage = null;
 
     public TankFrame() {
@@ -46,7 +47,7 @@ public class TankFrame extends Frame {
 
         Graphics graphics = screenImage.getGraphics();
         Color color = graphics.getColor();
-        graphics.setColor(Color.white);
+        graphics.setColor(Color.WHITE);
         graphics.fillRect(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         graphics.setColor(color);
         paint(graphics);
@@ -59,12 +60,23 @@ public class TankFrame extends Frame {
         Color color = g.getColor();
         g.setColor(Color.RED);
         g.drawString("子弹的数量：" + bullets.size(), 50, 50);
+        g.drawString("敌人的数量：" + enemyTank.size(), 150, 50);
         g.setColor(color);
 
         mainTank.paint(g);
 
-        for (Bullet bullet : bullets) {
-            bullet.paint(g);
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(g);
+        }
+
+        for (int i = 0; i < enemyTank.size(); i++) {
+            enemyTank.get(i).paint(g);
+        }
+
+        for (int i = 0; i < bullets.size(); i++) {
+            for (int j = 0; j < enemyTank.size(); j++) {
+                bullets.get(i).collide(enemyTank.get(j));
+            }
         }
     }
 

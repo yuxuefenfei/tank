@@ -1,18 +1,20 @@
 package com.w.tank.object;
 
 import com.w.tank.DirectionEnum;
+import com.w.tank.ResourceManager;
 import com.w.tank.TankFrame;
 
 import java.awt.*;
 
 public class Bullet extends GameObject {
 
-    private final static int DEFAULT_WIDTH = 10;
-    private final static int DEFAULT_HEIGHT = 10;
+    public final static int WIDTH = ResourceManager.bulletWidth();
+    public final static int HEIGHT = ResourceManager.bulletHeight();
+
     /**
      * 子弹的初始速度
      */
-    private int speed = 2;
+    private int speed = 20;
     /**
      * 子弹的方向
      */
@@ -25,14 +27,9 @@ public class Bullet extends GameObject {
     private TankFrame frame;
 
     public Bullet(int x, int y, DirectionEnum direction, TankFrame frame) {
-        super(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        super(x, y, WIDTH, HEIGHT);
         this.direction = direction;
         this.frame = frame;
-    }
-
-    public Bullet(int x, int y, int width, int height, DirectionEnum direction) {
-        super(x, y, width, height);
-        this.direction = direction;
     }
 
     @Override
@@ -51,10 +48,34 @@ public class Bullet extends GameObject {
                 x += speed;
                 break;
         }
-        g.fillOval(x, y, width, height);
 
-        if (x < 0 || y < 0 || x > TankFrame.DEFAULT_WIDTH || y > TankFrame.DEFAULT_HEIGHT) {
+        switch (direction) {
+            case UP:
+                g.drawImage(ResourceManager.bulletU, x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(ResourceManager.bulletD, x, y, null);
+                break;
+            case LEFT:
+                g.drawImage(ResourceManager.bulletL, x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(ResourceManager.bulletR, x, y, null);
+                break;
+        }
+
+        if (!lived || x < 0 || y < 0 || x > TankFrame.DEFAULT_WIDTH || y > TankFrame.DEFAULT_HEIGHT) {
             frame.bullets.remove(this);
+        }
+    }
+
+    public void collide(Tank tank) {
+        Rectangle r1 = new Rectangle(x, y, width, height);
+        Rectangle r2 = new Rectangle(tank.x, tank.y, tank.width, tank.height);
+
+        if (r1.intersects(r2)) {
+            this.lived = false;
+            tank.setLived(false);
         }
     }
 }
