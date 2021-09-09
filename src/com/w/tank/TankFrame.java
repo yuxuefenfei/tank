@@ -16,6 +16,11 @@ import java.util.List;
 public class TankFrame extends Frame {
 
     /**
+     * 默认的边界大小
+     */
+    public static final int DEFAULT_BORDER = 10;
+
+    /**
      * 默认的窗口宽度 800px
      */
     public static final int DEFAULT_WIDTH = 800;
@@ -24,15 +29,13 @@ public class TankFrame extends Frame {
      * 默认的窗口高度 600px
      */
     public static final int DEFAULT_HEIGHT = 600;
-
-    public List<Bullet> bullets = new ArrayList<>();
-    public List<Tank> enemyTank = new ArrayList<>();
-    public List<Explode> explodes = new ArrayList<>();
-
     /**
      * 主战坦克
      */
-    private Tank mainTank = new Tank(80, 60, this, DirectionEnum.DOWN, Group.GOOD);
+    private final Tank mainTank = new Tank(80, 60, this, DirectionEnum.DOWN, Group.GOOD);
+    public List<Bullet> bullets = new ArrayList<>();
+    public List<Tank> enemyTank = new ArrayList<>();
+    public List<Explode> explodes = new ArrayList<>();
     private Image screenImage = null;
 
     public TankFrame() {
@@ -40,6 +43,10 @@ public class TankFrame extends Frame {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         addWindowListener(new TankWindowListener());
         addKeyListener(new TankKeyListener());
+
+        // 默认主战坦克静止
+        mainTank.setStop(true);
+
     }
 
     @Override

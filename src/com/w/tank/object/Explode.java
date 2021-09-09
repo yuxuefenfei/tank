@@ -13,7 +13,7 @@ public class Explode extends GameObject {
 
     private int step;
 
-    private TankFrame frame;
+    private final TankFrame frame;
 
     public Explode(int x, int y, int width, int height, TankFrame frame) {
         super(x, y, width, height);

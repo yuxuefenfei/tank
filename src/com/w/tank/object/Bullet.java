@@ -14,29 +14,58 @@ public class Bullet extends GameObject {
     /**
      * 子弹的初始速度
      */
-    private int speed = 20;
+    private final int speed = 20;
     /**
      * 子弹的方向
      */
-    private DirectionEnum direction;
+    private final DirectionEnum direction;
+    private final Group group;
+    private final TankFrame frame;
+    private final Rectangle r = new Rectangle();
     /**
      * 存活
      */
     private boolean lived = true;
-
-    private Group group;
-
-    private TankFrame frame;
 
     public Bullet(int x, int y, DirectionEnum direction, Group group, TankFrame frame) {
         super(x, y, WIDTH, HEIGHT);
         this.direction = direction;
         this.group = group;
         this.frame = frame;
+
+        r.x = x;
+        r.y = y;
+        r.width = width;
+        r.height = height;
     }
 
     @Override
     public void paint(Graphics g) {
+        moving();
+        switch (direction) {
+            case UP:
+                g.drawImage(ResourceManager.BULLET[0], x, y, null);
+                break;
+            case RIGHT:
+                g.drawImage(ResourceManager.BULLET[1], x, y, null);
+                break;
+            case DOWN:
+                g.drawImage(ResourceManager.BULLET[2], x, y, null);
+                break;
+            case LEFT:
+                g.drawImage(ResourceManager.BULLET[3], x, y, null);
+                break;
+        }
+
+        if (!lived || x < 0 || y < 0 || x > TankFrame.DEFAULT_WIDTH || y > TankFrame.DEFAULT_HEIGHT) {
+            frame.bullets.remove(this);
+        }
+
+        r.x = x;
+        r.y = y;
+    }
+
+    private void moving() {
         switch (direction) {
             case UP:
                 y -= speed;
@@ -51,37 +80,11 @@ public class Bullet extends GameObject {
                 x += speed;
                 break;
         }
-
-        switch (direction) {
-            case UP:
-                g.drawImage(ResourceManager.bulletU, x, y, null);
-                break;
-            case DOWN:
-                g.drawImage(ResourceManager.bulletD, x, y, null);
-                break;
-            case LEFT:
-                g.drawImage(ResourceManager.bulletL, x, y, null);
-                break;
-            case RIGHT:
-                g.drawImage(ResourceManager.bulletR, x, y, null);
-                break;
-        }
-
-        if (!lived || x < 0 || y < 0 || x > TankFrame.DEFAULT_WIDTH || y > TankFrame.DEFAULT_HEIGHT) {
-            frame.bullets.remove(this);
-        }
     }
 
     public void collide(Tank tank) {
-
-        if (group.equals(Group.BAD)) {
-            return;
-        }
-
-        Rectangle r1 = new Rectangle(x, y, width, height);
-        Rectangle r2 = new Rectangle(tank.x, tank.y, tank.width, tank.height);
-
-        if (r1.intersects(r2)) {
+        if (group.equals(Group.BAD)) return;
+        if (r.intersects(tank.getR())) {
             this.lived = false;
             tank.setLived(false);
             frame.explodes.add(new Explode(tank.x + tank.width / 2 - Explode.WIDTH / 2, tank.y + tank.height / 2 - Explode.HEIGHT / 2, 0, 0, frame));
