@@ -8,6 +8,9 @@ import java.awt.*;
 
 public class Explode extends GameObject {
 
+    public final static int WIDTH = ResourceManager.explodeWidth();
+    public final static int HEIGHT = ResourceManager.explodeHeight();
+
     private int step;
 
     private TankFrame frame;

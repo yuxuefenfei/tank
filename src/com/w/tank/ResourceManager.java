@@ -55,4 +55,12 @@ public class ResourceManager {
     public static int tankHeight() {
         return tankL.getHeight();
     }
+
+    public static int explodeWidth() {
+        return explodes[0].getWidth();
+    }
+
+    public static int explodeHeight() {
+        return explodes[0].getHeight();
+    }
 }
