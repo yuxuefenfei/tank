@@ -1,0 +1,4 @@
+tankNum=8
+window.border=10
+window.width=1000
+window.height=800

@@ -9,7 +9,9 @@ public class Main {
         TankFrame frame = new TankFrame();
         frame.setVisible(true);
 
-        for (int i = 0; i < 6; i++) {
+        int tankNum = Integer.parseInt(ConfigManager.get("tankNum"));
+
+        for (int i = 0; i < tankNum; i++) {
             frame.enemyTank.add(new Tank(50 + i * 100, 200, frame, DirectionEnum.DOWN, Group.BAD));
         }
 

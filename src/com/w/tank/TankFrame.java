@@ -18,17 +18,12 @@ public class TankFrame extends Frame {
     /**
      * 默认的边界大小
      */
-    public static final int DEFAULT_BORDER = 10;
+    public static final int DEFAULT_BORDER = Integer.parseInt(ConfigManager.get("window.border"));
 
-    /**
-     * 默认的窗口宽度 800px
-     */
-    public static final int DEFAULT_WIDTH = 800;
+    public static final int DEFAULT_WIDTH = Integer.parseInt(ConfigManager.get("window.width"));
 
-    /**
-     * 默认的窗口高度 600px
-     */
-    public static final int DEFAULT_HEIGHT = 600;
+    public static final int DEFAULT_HEIGHT = Integer.parseInt(ConfigManager.get("window.height"));
+
     /**
      * 主战坦克
      */

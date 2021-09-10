@@ -141,7 +141,7 @@ public class Tank extends GameObject {
     private void boundsCheck() {
         int border = TankFrame.DEFAULT_BORDER;
         if (x < border) x = border;
-        if (y < border) y = border;
+        if (y < border + 30) y = border + 30;
         if (x > TankFrame.DEFAULT_WIDTH - width - border)
             x = TankFrame.DEFAULT_WIDTH - width - border;
         if (y > TankFrame.DEFAULT_HEIGHT - height - border)
