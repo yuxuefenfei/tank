@@ -10,6 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Client extends Frame {
 
@@ -18,7 +19,8 @@ public class Client extends Frame {
     public static final int FRAME_HEIGHT = PropertiesUtil.getInt("frame.height");
 
     public static final Client INSTANCE = new Client();
-    private final List<GameObject> objects = new ArrayList<>();
+    public static final Random r = new Random();
+    public final List<GameObject> objects = new ArrayList<>();
     private Image screenImage;
     private Tank mainTank;
 
@@ -35,8 +37,8 @@ public class Client extends Frame {
     @Override
     public void paint(Graphics g) {
         showInfo(g);
-        for (GameObject object : objects) {
-            object.paint(g);
+        for (int i = 0; i < objects.size(); i++) {
+            objects.get(i).paint(g);
         }
     }
 
@@ -112,6 +114,12 @@ public class Client extends Frame {
                     e.printStackTrace();
                 }
                 this.repaint();
+            }
+        }).start();
+
+        new Thread(() -> {
+            for (int i = 0; i < PropertiesUtil.getInt("npc.number"); i++) {
+                objects.add(new Tank(r.nextInt(FRAME_WIDTH), r.nextInt(FRAME_HEIGHT), Group.BAD));
             }
         }).start();
     }

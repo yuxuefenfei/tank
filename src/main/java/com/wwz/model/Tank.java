@@ -42,9 +42,14 @@ public class Tank extends MovableObject {
 
     @Override
     public void paint(Graphics g) {
+        if (Group.BAD == group && Client.r.nextInt(100) > 95) {
+            stop = false;
+        }
+
         if (touchBorder()) {
             stop = true;
         }
+
         if (!stop) {
             moving();
         }
@@ -75,12 +80,24 @@ public class Tank extends MovableObject {
                     g.drawImage(ResourceMgr.BAD_TANK[3], x, y, null);
                 break;
         }
-        // randomFire();
-        // randomDirection();
+        randomFire();
+        randomDirection();
         // boundsCheck();
 
         r.x = x;
         r.y = y;
+    }
+
+    private void randomDirection() {
+        if (Group.BAD == group && Client.r.nextInt(100) > 98) {
+            dir = Dir.values()[Client.r.nextInt(4)];
+        }
+    }
+
+    private void randomFire() {
+        if (Group.BAD == group && Client.r.nextInt(100) > 97) {
+            fire();
+        }
     }
 
     public void fire() {
