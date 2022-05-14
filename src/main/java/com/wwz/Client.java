@@ -1,5 +1,6 @@
 package com.wwz;
 
+import com.wwz.common.PropertiesUtil;
 import com.wwz.model.*;
 
 import java.awt.*;
@@ -12,6 +13,10 @@ import java.util.List;
 
 public class Client extends Frame {
 
+    public static final int FRAME_BORDER = 32;
+    public static final int FRAME_WIDTH = PropertiesUtil.getInt("frame.width");
+    public static final int FRAME_HEIGHT = PropertiesUtil.getInt("frame.height");
+
     public static final Client INSTANCE = new Client();
     private final List<GameObject> objects = new ArrayList<>();
     private Image screenImage;
@@ -19,17 +24,12 @@ public class Client extends Frame {
 
     private Client() {
         setTitle("坦克大战");
-        setSize(800, 600);
+        setSize(FRAME_WIDTH, FRAME_HEIGHT);
     }
 
-    private void showInfo(Graphics g) {
-        // 显示子弹数量
-        Color color = g.getColor();
-        g.setColor(Color.RED);
-
-        g.drawString("子弹的数量：" + objects.stream().filter(o -> o instanceof Bullet).count(), 50, 50);
-        g.drawString("敌人的数量：" + objects.stream().filter(o -> o instanceof Tank).count(), 150, 50);
-        g.setColor(color);
+    public static void main(String[] args) {
+        Client.INSTANCE.start();
+        System.out.println("start...");
     }
 
     @Override
@@ -40,20 +40,14 @@ public class Client extends Frame {
         }
     }
 
-    @Override
-    public void update(Graphics g) {
-        if (screenImage == null) {
-            screenImage = createImage(800, 600);
-        }
+    private void showInfo(Graphics g) {
+        // 显示子弹数量
+        Color color = g.getColor();
+        g.setColor(Color.RED);
 
-        Graphics graphics = screenImage.getGraphics();
-        Color color = graphics.getColor();
-        graphics.setColor(Color.BLACK);
-        graphics.fillRect(0, 0, screenImage.getWidth(null), screenImage.getHeight(null));
-        graphics.setColor(color);
-        paint(graphics);
-        g.drawImage(screenImage, 0, 0, null);
-        print(graphics);
+        g.drawString("子弹的数量：" + objects.stream().filter(o -> o instanceof Bullet).count(), 50, 50);
+        g.drawString("敌人的数量：" + (objects.stream().filter(o -> o instanceof Tank).count() - 1), 150, 50);
+        g.setColor(color);
     }
 
     public void start() {
@@ -125,5 +119,21 @@ public class Client extends Frame {
 
     public List<GameObject> getObjects() {
         return objects;
+    }
+
+    @Override
+    public void update(Graphics g) {
+        if (screenImage == null) {
+            screenImage = createImage(FRAME_WIDTH, FRAME_HEIGHT);
+        }
+
+        Graphics graphics = screenImage.getGraphics();
+        Color color = graphics.getColor();
+        graphics.setColor(Color.BLACK);
+        graphics.fillRect(0, 0, screenImage.getWidth(null), screenImage.getHeight(null));
+        graphics.setColor(color);
+        paint(graphics);
+        g.drawImage(screenImage, 0, 0, null);
+        print(graphics);
     }
 }

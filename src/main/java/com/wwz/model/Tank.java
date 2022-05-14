@@ -5,23 +5,19 @@ import com.wwz.common.ResourceMgr;
 
 import java.awt.*;
 
-public class Tank extends GameObject {
+public class Tank extends MovableObject {
 
-
-    private static final int speed = 4;
     /**
      * 坦克在窗口中的位置（矩形）
      */
     private static final Rectangle r = new Rectangle();
 
     private final Group group;
-    private Dir dir;
     private boolean stop = true;
 
     public Tank(int x, int y, Group group) {
-        super(x, y, ResourceMgr.tankWidth(group), ResourceMgr.tankHeight(group));
+        super(x, y, ResourceMgr.tankWidth(group), ResourceMgr.tankHeight(group), 4, Dir.UP);
         this.group = group;
-        this.dir = Dir.UP;
     }
 
     public Group getGroup() {
@@ -46,7 +42,13 @@ public class Tank extends GameObject {
 
     @Override
     public void paint(Graphics g) {
-        moving();
+        if (touchBorder()) {
+            stop = true;
+        }
+        if (!stop) {
+            moving();
+        }
+
         switch (dir) {
             case UP:
                 if (group.equals(Group.GOOD))
@@ -79,27 +81,6 @@ public class Tank extends GameObject {
 
         r.x = x;
         r.y = y;
-    }
-
-    private void moving() {
-        if (stop) {
-            return;
-        }
-
-        switch (dir) {
-            case UP:
-                y -= speed;
-                break;
-            case DOWN:
-                y += speed;
-                break;
-            case LEFT:
-                x -= speed;
-                break;
-            case RIGHT:
-                x += speed;
-                break;
-        }
     }
 
     public void fire() {

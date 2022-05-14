@@ -1,32 +1,31 @@
 package com.wwz.model;
 
+import com.wwz.Client;
 import com.wwz.common.ResourceMgr;
 
 import java.awt.*;
 
-public class Bullet extends GameObject {
-
-    /**
-     * 子弹的初始速度
-     */
-    private final int speed = 20;
+public class Bullet extends MovableObject {
 
     /**
      * 子弹的位置（矩形）
      */
     private final Rectangle r = new Rectangle();
     private final Tank tank;
-    private final Dir dir;
 
     public Bullet(Tank tank) {
-        super(tank.x + ResourceMgr.bulletWidth() >> 2, tank.y + ResourceMgr.bulletHeight() >> 2, ResourceMgr.bulletWidth(), ResourceMgr.bulletHeight());
+        super(tank.x + ResourceMgr.bulletWidth() / 2, tank.y + ResourceMgr.bulletHeight() / 2, ResourceMgr.bulletWidth(), ResourceMgr.bulletHeight(), 20, tank.dir);
         this.tank = tank;
-        this.dir = tank.getDir();
     }
 
     @Override
     public void paint(Graphics g) {
         moving();
+
+        if (throughBorder()) {
+            Client.INSTANCE.getObjects().remove(this);
+        }
+
         switch (dir) {
             case UP:
                 g.drawImage(ResourceMgr.BULLET[0], x, y, null);
@@ -44,22 +43,5 @@ public class Bullet extends GameObject {
 
         r.x = x;
         r.y = y;
-    }
-
-    private void moving() {
-        switch (dir) {
-            case UP:
-                y -= speed;
-                break;
-            case DOWN:
-                y += speed;
-                break;
-            case LEFT:
-                x -= speed;
-                break;
-            case RIGHT:
-                x += speed;
-                break;
-        }
     }
 }
