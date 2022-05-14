@@ -8,9 +8,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Client extends Frame {
 
@@ -21,9 +20,17 @@ public class Client extends Frame {
     public static final Client INSTANCE = new Client();
     public static final Random r = new Random();
     public final List<GameObject> objects = new ArrayList<>();
+    private final static Map<Integer, Dir> dirMap = new HashMap<>();
     private final CollideChain collideChain = new CollideChain();
     private Image screenImage;
     private Tank mainTank;
+
+    static {
+        dirMap.put(KeyEvent.VK_UP, Dir.UP);
+        dirMap.put(KeyEvent.VK_DOWN, Dir.DOWN);
+        dirMap.put(KeyEvent.VK_LEFT, Dir.LEFT);
+        dirMap.put(KeyEvent.VK_RIGHT, Dir.RIGHT);
+    }
 
     private Client() {
         setTitle("坦克大战");
@@ -63,13 +70,6 @@ public class Client extends Frame {
         g.setColor(color);
     }
 
-    private void setMainTankState(boolean stop, Dir dir) {
-        // if (!mainTank.isCollide()) {
-        mainTank.setStop(stop);
-        mainTank.setDir(dir);
-        // }
-    }
-
     public void start() {
         this.setVisible(true);
         this.addWindowListener(new WindowAdapter() {
@@ -81,32 +81,35 @@ public class Client extends Frame {
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
-                        setMainTankState(false, Dir.UP);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        setMainTankState(false, Dir.DOWN);
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        setMainTankState(false, Dir.LEFT);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        setMainTankState(false, Dir.RIGHT);
-                        break;
-                    default:
-                        break;
-                }
+                Dir dir = dirMap.getOrDefault(e.getKeyCode(), mainTank.getDir());
+                mainTank.setState(false, dir);
+                // switch (e.getKeyCode()) {
+                //     case KeyEvent.VK_UP:
+                //         mainTank.setState(false, Dir.UP);
+                //         break;
+                //     case KeyEvent.VK_DOWN:
+                //         mainTank.setState(false, Dir.DOWN);
+                //         break;
+                //     case KeyEvent.VK_LEFT:
+                //         mainTank.setState(false, Dir.LEFT);
+                //         break;
+                //     case KeyEvent.VK_RIGHT:
+                //         mainTank.setState(false, Dir.RIGHT);
+                //         break;
+                //     default:
+                //         break;
+                // }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
+
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
                     case KeyEvent.VK_RIGHT:
                     case KeyEvent.VK_LEFT:
                     case KeyEvent.VK_DOWN:
-                        mainTank.setStop(true);
+                        mainTank.setState(true, mainTank.getDir());
                         break;
                     case KeyEvent.VK_CONTROL:
                         mainTank.fire();

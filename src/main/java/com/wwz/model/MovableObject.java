@@ -17,7 +17,7 @@ public abstract class MovableObject extends GameObject {
         this.dir = dir;
     }
 
-    public final void moving() {
+    public void moving() {
         switch (dir) {
             case UP:
                 y -= speed;

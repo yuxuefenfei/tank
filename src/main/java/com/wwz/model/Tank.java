@@ -14,6 +14,7 @@ public class Tank extends MovableObject {
 
     private final Group group;
     private boolean stop = true;
+    private Dir oldDir;
 
     public Tank(int x, int y, Group group) {
         super(x, y, ResourceMgr.tankWidth(group), ResourceMgr.tankHeight(group), 4, Dir.UP);
@@ -43,6 +44,14 @@ public class Tank extends MovableObject {
 
     public void setStop(boolean stop) {
         this.stop = stop;
+    }
+
+    public Dir getOldDir() {
+        return oldDir;
+    }
+
+    public void setOldDir(Dir oldDir) {
+        this.oldDir = oldDir;
     }
 
     @Override
@@ -109,5 +118,17 @@ public class Tank extends MovableObject {
     public void fire() {
         Bullet bullet = new Bullet(this);
         Client.INSTANCE.objects.add(bullet);
+    }
+
+    public void setState(boolean stop, Dir dir) {
+        this.stop = stop;
+        this.dir = dir;
+    }
+
+    @Override
+    public void moving() {
+        if (!collide || oldDir != dir) {
+            super.moving();
+        }
     }
 }
