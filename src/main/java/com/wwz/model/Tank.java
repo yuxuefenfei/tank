@@ -10,7 +10,7 @@ public class Tank extends MovableObject {
     /**
      * 坦克在窗口中的位置（矩形）
      */
-    private static final Rectangle r = new Rectangle();
+    public final Rectangle r = new Rectangle();
 
     private final Group group;
     private boolean stop = true;
@@ -18,6 +18,11 @@ public class Tank extends MovableObject {
     public Tank(int x, int y, Group group) {
         super(x, y, ResourceMgr.tankWidth(group), ResourceMgr.tankHeight(group), 4, Dir.UP);
         this.group = group;
+
+        r.x = x;
+        r.y = y;
+        r.width = w;
+        r.height = h;
     }
 
     public Group getGroup() {
@@ -80,8 +85,9 @@ public class Tank extends MovableObject {
                     g.drawImage(ResourceMgr.BAD_TANK[3], x, y, null);
                 break;
         }
+
         randomFire();
-        randomDirection();
+        // randomDirection();
         // boundsCheck();
 
         r.x = x;
@@ -102,6 +108,6 @@ public class Tank extends MovableObject {
 
     public void fire() {
         Bullet bullet = new Bullet(this);
-        Client.INSTANCE.getObjects().add(bullet);
+        Client.INSTANCE.objects.add(bullet);
     }
 }

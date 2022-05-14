@@ -10,12 +10,17 @@ public class Bullet extends MovableObject {
     /**
      * 子弹的位置（矩形）
      */
-    private final Rectangle r = new Rectangle();
+    public final Rectangle r = new Rectangle();
     private final Tank tank;
 
     public Bullet(Tank tank) {
         super(tank.x + ResourceMgr.bulletWidth() / 2, tank.y + ResourceMgr.bulletHeight() / 2, ResourceMgr.bulletWidth(), ResourceMgr.bulletHeight(), 20, tank.dir);
         this.tank = tank;
+
+        r.x = x;
+        r.y = y;
+        r.width = w;
+        r.height = h;
     }
 
     @Override
@@ -23,7 +28,7 @@ public class Bullet extends MovableObject {
         moving();
 
         if (throughBorder()) {
-            Client.INSTANCE.getObjects().remove(this);
+            Client.INSTANCE.objects.remove(this);
         }
 
         switch (dir) {
@@ -43,5 +48,9 @@ public class Bullet extends MovableObject {
 
         r.x = x;
         r.y = y;
+    }
+
+    public Tank getTank() {
+        return tank;
     }
 }

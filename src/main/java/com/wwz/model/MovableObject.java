@@ -5,7 +5,10 @@ import com.wwz.Client;
 public abstract class MovableObject extends GameObject {
 
     protected int speed;
-    protected boolean living;
+    /**
+     * 发生碰撞
+     */
+    protected boolean collide;
     protected Dir dir;
 
     public MovableObject(int x, int y, int w, int h, int speed, Dir dir) {
@@ -59,5 +62,13 @@ public abstract class MovableObject extends GameObject {
             default:
                 return false;
         }
+    }
+
+    public boolean isCollide() {
+        return collide;
+    }
+
+    public void setCollide(boolean collide) {
+        this.collide = collide;
     }
 }

@@ -21,6 +21,7 @@ public class Client extends Frame {
     public static final Client INSTANCE = new Client();
     public static final Random r = new Random();
     public final List<GameObject> objects = new ArrayList<>();
+    private final CollideChain collideChain = new CollideChain();
     private Image screenImage;
     private Tank mainTank;
 
@@ -40,6 +41,16 @@ public class Client extends Frame {
         for (int i = 0; i < objects.size(); i++) {
             objects.get(i).paint(g);
         }
+
+        // 碰撞检测
+        for (int i = 0; i < objects.size() - 1; i++) {
+            for (int j = i + 1; j < objects.size(); j++) {
+                boolean collide = collideChain.collide(objects.get(i), objects.get(j));
+                if (collide) {
+                    collideChain.collided(objects.get(i), objects.get(j));
+                }
+            }
+        }
     }
 
     private void showInfo(Graphics g) {
@@ -50,6 +61,13 @@ public class Client extends Frame {
         g.drawString("子弹的数量：" + objects.stream().filter(o -> o instanceof Bullet).count(), 50, 50);
         g.drawString("敌人的数量：" + (objects.stream().filter(o -> o instanceof Tank).count() - 1), 150, 50);
         g.setColor(color);
+    }
+
+    private void setMainTankState(boolean stop, Dir dir) {
+        // if (!mainTank.isCollide()) {
+        mainTank.setStop(stop);
+        mainTank.setDir(dir);
+        // }
     }
 
     public void start() {
@@ -65,20 +83,16 @@ public class Client extends Frame {
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_UP:
-                        mainTank.setStop(false);
-                        mainTank.setDir(Dir.UP);
+                        setMainTankState(false, Dir.UP);
                         break;
                     case KeyEvent.VK_DOWN:
-                        mainTank.setStop(false);
-                        mainTank.setDir(Dir.DOWN);
+                        setMainTankState(false, Dir.DOWN);
                         break;
                     case KeyEvent.VK_LEFT:
-                        mainTank.setStop(false);
-                        mainTank.setDir(Dir.LEFT);
+                        setMainTankState(false, Dir.LEFT);
                         break;
                     case KeyEvent.VK_RIGHT:
-                        mainTank.setStop(false);
-                        mainTank.setDir(Dir.RIGHT);
+                        setMainTankState(false, Dir.RIGHT);
                         break;
                     default:
                         break;
@@ -106,6 +120,10 @@ public class Client extends Frame {
         mainTank = new Tank(400, 400, Group.GOOD);
         objects.add(mainTank);
 
+        collideChain
+                .add(new TankTankCollider())
+                .add(new TankBulletCollider());
+
         new Thread(() -> {
             while (true) {
                 try {
@@ -122,11 +140,6 @@ public class Client extends Frame {
                 objects.add(new Tank(r.nextInt(FRAME_WIDTH), r.nextInt(FRAME_HEIGHT), Group.BAD));
             }
         }).start();
-    }
-
-
-    public List<GameObject> getObjects() {
-        return objects;
     }
 
     @Override
