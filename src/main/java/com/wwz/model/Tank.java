@@ -26,34 +26,6 @@ public class Tank extends MovableObject {
         r.height = h;
     }
 
-    public Group getGroup() {
-        return group;
-    }
-
-    public Dir getDir() {
-        return dir;
-    }
-
-    public void setDir(Dir dir) {
-        this.dir = dir;
-    }
-
-    public boolean isStop() {
-        return stop;
-    }
-
-    public void setStop(boolean stop) {
-        this.stop = stop;
-    }
-
-    public Dir getOldDir() {
-        return oldDir;
-    }
-
-    public void setOldDir(Dir oldDir) {
-        this.oldDir = oldDir;
-    }
-
     @Override
     public void paint(Graphics g) {
         if (Group.BAD == group && Client.r.nextInt(100) > 95) {
@@ -96,16 +68,15 @@ public class Tank extends MovableObject {
         }
 
         randomFire();
-        // randomDirection();
-        // boundsCheck();
+        randomDir();
 
         r.x = x;
         r.y = y;
     }
 
-    private void randomDirection() {
+    private void randomDir() {
         if (Group.BAD == group && Client.r.nextInt(100) > 98) {
-            dir = Dir.values()[Client.r.nextInt(4)];
+            this.dir = Dir.values()[Client.r.nextInt(4)];
         }
     }
 
@@ -130,5 +101,33 @@ public class Tank extends MovableObject {
         if (!collide || oldDir != dir) {
             super.moving();
         }
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public Dir getDir() {
+        return dir;
+    }
+
+    public void setDir(Dir dir) {
+        this.dir = dir;
+    }
+
+    public boolean isStop() {
+        return stop;
+    }
+
+    public void setStop(boolean stop) {
+        this.stop = stop;
+    }
+
+    public Dir getOldDir() {
+        return oldDir;
+    }
+
+    public void setOldDir(Dir oldDir) {
+        this.oldDir = oldDir;
     }
 }

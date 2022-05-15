@@ -13,7 +13,7 @@ public class ResourceMgr {
     public static final BufferedImage[] BAD_TANK = new BufferedImage[4];
     public static final BufferedImage[] BULLET = new BufferedImage[4];
     public static final BufferedImage[] EXPLODES = new BufferedImage[16];
-
+    public static final BufferedImage[] WALL = new BufferedImage[2];
 
     static {
         ClassLoader loader = ResourceMgr.class.getClassLoader();
@@ -30,6 +30,11 @@ public class ResourceMgr {
             for (int i = 0; i < EXPLODES.length; i++) {
                 EXPLODES[i] = ImageIO.read(Objects.requireNonNull(loader.getResourceAsStream("images/e" + (i + 1) + ".gif")));
             }
+
+            for (int i = 0; i < WALL.length; i++) {
+                WALL[i] = ImageUtil.rotateImage(ImageIO.read(Objects.requireNonNull(loader.getResourceAsStream("images/wall.png"))), i * 90);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,5 +65,13 @@ public class ResourceMgr {
 
     public static int explodeHeight() {
         return EXPLODES[0].getHeight();
+    }
+
+    public static int wallWidth(int type) {
+        return WALL[type].getWidth();
+    }
+
+    public static int wallHeight(int type) {
+        return WALL[type].getHeight();
     }
 }

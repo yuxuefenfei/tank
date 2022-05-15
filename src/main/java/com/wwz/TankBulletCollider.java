@@ -1,9 +1,6 @@
 package com.wwz;
 
-import com.wwz.model.Bullet;
-import com.wwz.model.Explode;
-import com.wwz.model.GameObject;
-import com.wwz.model.Tank;
+import com.wwz.model.*;
 
 public class TankBulletCollider implements Collider {
 
@@ -28,12 +25,16 @@ public class TankBulletCollider implements Collider {
             Tank tank = (Tank) o1;
             Bullet bullet = (Bullet) o2;
 
-            // tank.setLiving(false);
-            Explode explode = new Explode(0, 0);
-            explode.setX(tank.getX() + tank.getW() / 2 - explode.getW() / 2);
-            explode.setY(tank.getY() + tank.getH() / 2 - explode.getH() / 2);
-            Client.INSTANCE.objects.add(explode);
-            Client.INSTANCE.objects.remove(bullet);
+            if (tank.getGroup() != bullet.getTank().getGroup()) {
+                Explode explode = new Explode(0, 0);
+                explode.setX(tank.getX() + tank.getW() / 2 - explode.getW() / 2);
+                explode.setY(tank.getY() + tank.getH() / 2 - explode.getH() / 2);
+                Client.INSTANCE.objects.add(explode);
+                Client.INSTANCE.objects.remove(bullet);
+                if (tank.getGroup() == Group.BAD) {
+                    Client.INSTANCE.objects.remove(tank);
+                }
+            }
             return;
 
         } else if (o1 instanceof Bullet && o2 instanceof Tank) {

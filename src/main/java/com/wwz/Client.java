@@ -2,14 +2,18 @@ package com.wwz;
 
 import com.wwz.common.PropertiesUtil;
 import com.wwz.model.*;
+import com.wwz.service.FrameRepaintService;
+import com.wwz.service.GenerateNPCService;
+import com.wwz.service.GenerateWallService;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
+import java.util.Random;
 
 public class Client extends Frame {
 
@@ -20,17 +24,9 @@ public class Client extends Frame {
     public static final Client INSTANCE = new Client();
     public static final Random r = new Random();
     public final List<GameObject> objects = new ArrayList<>();
-    private final static Map<Integer, Dir> dirMap = new HashMap<>();
     private final CollideChain collideChain = new CollideChain();
     private Image screenImage;
     private Tank mainTank;
-
-    static {
-        dirMap.put(KeyEvent.VK_UP, Dir.UP);
-        dirMap.put(KeyEvent.VK_DOWN, Dir.DOWN);
-        dirMap.put(KeyEvent.VK_LEFT, Dir.LEFT);
-        dirMap.put(KeyEvent.VK_RIGHT, Dir.RIGHT);
-    }
 
     private Client() {
         setTitle("坦克大战");
@@ -81,24 +77,22 @@ public class Client extends Frame {
         this.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                Dir dir = dirMap.getOrDefault(e.getKeyCode(), mainTank.getDir());
-                mainTank.setState(false, dir);
-                // switch (e.getKeyCode()) {
-                //     case KeyEvent.VK_UP:
-                //         mainTank.setState(false, Dir.UP);
-                //         break;
-                //     case KeyEvent.VK_DOWN:
-                //         mainTank.setState(false, Dir.DOWN);
-                //         break;
-                //     case KeyEvent.VK_LEFT:
-                //         mainTank.setState(false, Dir.LEFT);
-                //         break;
-                //     case KeyEvent.VK_RIGHT:
-                //         mainTank.setState(false, Dir.RIGHT);
-                //         break;
-                //     default:
-                //         break;
-                // }
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_UP:
+                        mainTank.setState(false, Dir.UP);
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        mainTank.setState(false, Dir.DOWN);
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        mainTank.setState(false, Dir.LEFT);
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        mainTank.setState(false, Dir.RIGHT);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
@@ -125,24 +119,13 @@ public class Client extends Frame {
 
         collideChain
                 .add(new TankTankCollider())
-                .add(new TankBulletCollider());
+                .add(new TankBulletCollider())
+                .add(new TankWallCollider());
+                // .add(new BulletWallCollider());
 
-        new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                this.repaint();
-            }
-        }).start();
-
-        new Thread(() -> {
-            for (int i = 0; i < PropertiesUtil.getInt("npc.number"); i++) {
-                objects.add(new Tank(r.nextInt(FRAME_WIDTH), r.nextInt(FRAME_HEIGHT), Group.BAD));
-            }
-        }).start();
+        FrameRepaintService.INSTANCE.start();
+        GenerateNPCService.INSTANCE.start();
+        GenerateWallService.INSTANCE.start();
     }
 
     @Override
